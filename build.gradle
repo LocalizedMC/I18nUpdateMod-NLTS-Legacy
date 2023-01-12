@@ -42,12 +42,10 @@ dependencies {
 
 processResources {
     inputs.property "mod_version", project.version
-    inputs.property "modid", project.mod_id
     inputs.property "mc_version", project.minecraft_version
 
     filesMatching("mcmod.info") {
         expand "mod_version": project.version
-        expand "modid": project.mod_id
         expand "mc_version": project.minecraft_version
     }
 }
