@@ -1,3 +1,3 @@
-# ArchitecturyModTemplate-Forge
+# I18nUpdateMod-NLTS Legacy
 
-These Templates are [Architectury Templates](https://github.com/architectury/architectury-templates) Fork (Only Forge).
+支持 1.12.2 Forge/Fabric。
