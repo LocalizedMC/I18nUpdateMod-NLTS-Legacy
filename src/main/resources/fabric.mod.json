@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "i18nupdatemod",
+  "version": "${version}",
+  "name": "I18nUpdataMod-NLTS-LegacyFabric",
+  "description": "自动汉化更新模组",
+  "credits": [
+    "TartaricAcid",
+    "baka-gourd",
+    "exzhawk"
+  ],
+  "authors": [
+    "TexTrue",
+    "TexTrueStudio"
+  ],
+  "contact": {
+    "homepage": "https://github.com/BocchiKessokuTeam/I18nUpdateMod-NLTS-Legacy",
+    "sources": "https://github.com/BocchiKessokuTeam/I18nUpdateMod-NLTS-Legacy"
+  },
+  "license": "MIT",
+  "icon": "assets/i18nupdatemod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "org.thinkingstudio.i18nupdatemod.I18nUpdateMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.12.0",
+    "minecraft": "1.12.2"
+  }
+}

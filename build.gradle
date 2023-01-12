@@ -1,96 +1,118 @@
-buildscript {
-    dependencies {
-        classpath 'com.github.BocchiKessokuTeam.ArchitecturyLoomLegacy:ArchitecturyLoom-Legacy:0.12.0.2'
-    }
-}
 plugins {
-    //id "dev.architectury.legacy.loom" version "0.12.0.2"
-    id "java"
-    id "maven-publish"
+	id 'fabric-loom' version "1.0-SNAPSHOT" // To use chocoloom, change the version to a commit hash
+	id 'io.github.juuxel.loom-quiltflower' version '1.8.0'
+	id 'maven-publish'
 }
-apply plugin: "dev.architectury.legacy.loom"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-loom {
-    setIntermediaryUrl("https://maven.legacyfabric.net/net/legacyfabric/intermediary/${minecraft_version}/intermediary-${minecraft_version}-v2.jar")
-    forge {
-        dataGen {
-            mod project.mod_id
-        }
-    }
-    launches {
-        data {
-            arg "--existing", file("src/main/resources").absolutePath
-        }
-    }
-}
-
 repositories {
-
+	maven {
+		name = "legacy-fabric"
+		url = "https://maven.legacyfabric.net"
+	}
+	// Fixed LWJGL on Linux
+	maven {
+		name = 'Babric'
+		url = 'https://maven.glass-launcher.net/babric'
+	}
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
 }
+
+loom {
+	setIntermediaryUrl('https://maven.legacyfabric.net/net/legacyfabric/intermediary/%1$s/intermediary-%1$s-v2.jar');
+}
+
+def lwjgl2 = !project.minecraft_version.startsWith("1.13")
+def currentOs = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "de.oceanlabs.mcp:mcp_${project.mcp_channel}:${project.mcp_version}@zip"
-    forge "net.minecraftforge:forge:${project.forge_version}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.legacyfabric:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	modImplementation ("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${fabric_version}") {
+ 		exclude module: "legacy-fabric-entity-events-v1"
+ 	}
+
+	if (lwjgl2) {
+		if (currentOs.contains("mac")) {
+			implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
+			implementation 'org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'
+			implementation 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+		} else if (currentOs.contains("linux")) {
+			implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-babric.1'
+			implementation 'org.lwjgl.lwjgl:lwjgl:2.9.4-babric.1'
+			implementation 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-babric.1'
+		}
+	}
+}
+
+if (lwjgl2) {
+	if (currentOs.contains("mac")) {
+		configurations.all {
+			resolutionStrategy {
+				dependencySubstitution {
+					substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209')
+					substitute module('org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209')
+				}
+				force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+			}
+		}
+	} else if (currentOs.contains("linux")) {
+		configurations.all {
+			resolutionStrategy {
+				dependencySubstitution {
+					substitute(module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209')) using module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-babric.1')
+					substitute module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209') using module('org.lwjgl.lwjgl:lwjgl:2.9.4-babric.1')
+				}
+				force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-babric.1'
+			}
+		}
+	}
 }
 
 processResources {
-    inputs.property "mod_version", project.version
+	inputs.property "version", project.version
 
-    filesMatching("mcmod.info") {
-        expand "mod_version": project.version
-    }
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-    options.release = 8
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
 }
 
 java {
-    withSourcesJar()
+	withSourcesJar()
 }
 
 jar {
-    // add some additional metadata to the jar manifest
-    manifest {
-        attributes([
-                "Specification-Title"     : project.mod_id,
-                "Specification-Vendor"    : project.mod_author,
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : version,
-                "Implementation-Vendor"   : project.mod_author,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}" }
+	}
 }
 
 // configure the maven publication
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
+	// select the repositories you want to publish to
+	repositories {
+		// uncomment to publish to the local maven
+		// mavenLocal()
+	}
 }

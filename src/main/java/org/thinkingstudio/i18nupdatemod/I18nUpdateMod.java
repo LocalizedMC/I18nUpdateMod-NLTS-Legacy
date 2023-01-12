@@ -1,12 +1,7 @@
-package com.github.tartaricacid.i18nupdatemod;
+package org.thinkingstudio.i18nupdatemod;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.ResourcePackRepository;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.init.Blocks;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.MinecraftClient;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -19,18 +14,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
-@Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, version = I18nUpdateMod.VERSION)
-public class I18nUpdateMod {
-
-    public static final String MODID = "i18nupdatemod";
-    public static final String NAME = "I18nUpdateMod-NLTS-Legacy";
-    public static final String VERSION = "1.0";
-    public static final Path CACHE_DIR = Paths.get(System.getProperty("user.home"), "." + MODID, "1.12");
-    public static final Path RESOURCE_FOLDER = Paths.get(Minecraft.getMinecraft().gameDir.getPath(), "resourcepacks");
+public class I18nUpdateMod implements ClientModInitializer {
+    public static final String MOD_ID = "i18nupdatemod";
+    public static final Path CACHE_DIR = Paths.get(System.getProperty("user.home"), "." + MOD_ID, "1.12");
+    public static final Path RESOURCE_FOLDER = Paths.get(MinecraftClient.getInstance().runDirectory.getAbsolutePath(),"/resourcespacks");
     public static final String LANG_PACK_FILE_NAME = "Minecraft-Mod-Language-Modpack.zip";
     public static final String MD5_FILE_NAME = "1.12.md5";
     public static final Path LOCAL_LANGUAGE_PACK = RESOURCE_FOLDER.resolve(LANG_PACK_FILE_NAME);
@@ -38,13 +27,16 @@ public class I18nUpdateMod {
     public static final Path LANGUAGE_MD5 = CACHE_DIR.resolve(MD5_FILE_NAME);
     public static final String LINK = "https://ghproxy.com/https://raw.githubusercontent.com/zkitefly/TranslationPackConvert/main/files/" + LANG_PACK_FILE_NAME;
     public static final String MD5 = "https://ghproxy.com/https://raw.githubusercontent.com/zkitefly/TranslationPackConvert/main/files/" + MD5_FILE_NAME;
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static String MD5String = "";
+    public static final Path OPTIONS_FILE = Paths.get(MinecraftClient.getInstance().runDirectory.toString(), "options.txt");
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-
-        Minecraft.getMinecraft().gameSettings.language="zh_cn";
+    @Override
+    public void onInitializeClient() {
+        try {
+            OptionsUtils.createInitFile(OPTIONS_FILE.toFile());
+        } catch (IOException ignore) {
+        }
 
         // 检查主资源包目录是否存在
         if (!Files.isDirectory(CACHE_DIR)) {
@@ -173,31 +165,9 @@ public class I18nUpdateMod {
     }
 
     public static void setResourcesRepository() {
-        Minecraft mc = Minecraft.getMinecraft();
-        GameSettings gameSettings = mc.gameSettings;
-        // 在 gameSetting 中加载资源包
-        if (!gameSettings.resourcePacks.contains(LANG_PACK_FILE_NAME)) {
-            mc.gameSettings.resourcePacks.add(LANG_PACK_FILE_NAME);
-        } else {
-            List<String> packs = new ArrayList<>(10);
-            // 资源包的 index 越小优先级越低（在资源包 GUI 中置于更低层）
-            packs.add(LANG_PACK_FILE_NAME);
-            packs.addAll(gameSettings.resourcePacks);
-            gameSettings.resourcePacks = packs;
-        }
-        //reloadResources();
-        //并不需要在此重载资源包，因为构造mod在加载mod资源包之前，之后minecraft会自己重载资源包。
-    }
-/*
-    public static void reloadResources() {
-        Minecraft mc = Minecraft.getMinecraft();
-        // 因为这时候资源包已经加载了，所以需要重新读取，重新加载
-        ResourcePackRepository resourcePackRepository = mc.getResourcePackRepository();
         try {
-            resourcePackRepository.reload();
-        } catch (ConcurrentModificationException ignore) {
+            OptionsUtils.changeFile(OPTIONS_FILE.toFile());
+        } catch (IOException ignore) {
         }
     }
- */
 }
-
