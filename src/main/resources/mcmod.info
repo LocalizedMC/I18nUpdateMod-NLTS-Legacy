@@ -1,15 +1,15 @@
 [
   {
     "modid": "${mod_id}",
-    "name": "Example Mod",
-    "description": "Example placeholder mod.",
+    "name": "I18nUpdateMod-NLTS Legacy",
+    "description": "自动汉化更新模组",
     "version": "${mod_version}",
     "mcversion": "${mc_version}",
-    "url": "",
+    "url": "https://github.com/BocchiKessokuTeam/I18nUpdateMod-NLTS-Legacy",
     "updateUrl": "",
-    "authorList": ["ExampleDude"],
-    "credits": "ExampleCredit",
-    "logoFile": "",
+    "authorList": ["TexTrue, TexTrueStudio"],
+    "credits": "TartaricAcid, baka-gourd, exzhawk",
+    "logoFile": "icon.png",
     "screenshots": [],
     "dependencies": []
   }
