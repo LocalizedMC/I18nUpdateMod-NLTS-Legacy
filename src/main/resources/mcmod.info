@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "${mod_id}",
+    "name": "Example Mod",
+    "description": "Example placeholder mod.",
+    "version": "${mod_version}",
+    "mcversion": "${mc_version}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["ExampleDude"],
+    "credits": "ExampleCredit",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
