@@ -19,7 +19,7 @@ import java.util.List;
 public class I18nUpdateMod implements ClientModInitializer {
     public static final String MOD_ID = "i18nupdatemod";
     public static final Path CACHE_DIR = Paths.get(System.getProperty("user.home"), "." + MOD_ID, "1.12");
-    public static final Path RESOURCE_FOLDER = Paths.get(MinecraftClient.getInstance().runDirectory.getAbsolutePath(),"/resourcespacks");
+    public static final Path RESOURCE_FOLDER = Paths.get(MinecraftClient.getInstance().runDirectory.getAbsolutePath(),"/resourcepacks");
     public static final String LANG_PACK_FILE_NAME = "Minecraft-Mod-Language-Modpack.zip";
     public static final String MD5_FILE_NAME = "1.12.md5";
     public static final Path LOCAL_LANGUAGE_PACK = RESOURCE_FOLDER.resolve(LANG_PACK_FILE_NAME);
