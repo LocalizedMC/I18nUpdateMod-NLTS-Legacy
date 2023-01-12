@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "i18nupdatemod",
   "version": "${version}",
-  "name": "I18nUpdataMod-NLTS-LegacyFabric",
+  "name": "I18nUpdataMod-NLTS Legacy",
   "description": "自动汉化更新模组",
   "credits": [
     "TartaricAcid",
@@ -22,7 +22,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "org.thinkingstudio.i18nupdatemod.I18nUpdateMod"
+      "com.github.tartaricacid.i18nupdatemod.I18nUpdateMod"
     ]
   },
   "depends": {

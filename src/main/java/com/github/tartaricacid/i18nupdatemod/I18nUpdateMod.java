@@ -1,4 +1,4 @@
-package org.thinkingstudio.i18nupdatemod;
+package com.github.tartaricacid.i18nupdatemod;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;

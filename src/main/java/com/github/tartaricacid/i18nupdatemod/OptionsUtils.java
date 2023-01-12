@@ -1,4 +1,4 @@
-package org.thinkingstudio.i18nupdatemod;
+package com.github.tartaricacid.i18nupdatemod;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
