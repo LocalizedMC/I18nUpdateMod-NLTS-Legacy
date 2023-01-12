@@ -1,6 +1,6 @@
 [
   {
-    "modid": "${mod_id}",
+    "modid": "${modid}",
     "name": "I18nUpdateMod-NLTS Legacy",
     "description": "自动汉化更新模组",
     "version": "${mod_version}",
