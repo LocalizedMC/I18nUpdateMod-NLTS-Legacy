@@ -22,6 +22,6 @@ public class I18nModConfig {
 
         @Config.Name("MD5名称")
         @Config.Comment("用来设置获取下载源的资源包的MD5名称（注意：不带文件扩展名！）")
-        public String md5Name = "1.12";
+        public String md5Name = "1.12.2";
     }
 }
