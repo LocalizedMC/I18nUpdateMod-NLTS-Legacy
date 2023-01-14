@@ -17,7 +17,7 @@
     "homepage": "https://github.com/BocchiKessokuTeam/I18nUpdateMod-NLTS-Legacy",
     "sources": "https://github.com/BocchiKessokuTeam/I18nUpdateMod-NLTS-Legacy"
   },
-  "license": "MIT",
+  "license": "GPLv3",
   "icon": "assets/i18nupdatemod/icon.png",
   "environment": "*",
   "entrypoints": {
