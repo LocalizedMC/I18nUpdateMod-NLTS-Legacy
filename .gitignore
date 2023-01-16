@@ -1,33 +1,79 @@
-# gradle
+# Build #
+#########
+MANIFEST.MF
+dependency-reduced-pom.xml
 
-.gradle/
-build/
-out/
-classes/
+# Compiled #
+############
+bin
+build
+dist
+lib
+out
+run
+target
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
 
-# eclipse
+# Databases #
+#############
+*.db
+*.sql
+*.sqlite
 
-*.launch
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
 
-# idea
+# Repository #
+##############
+.git
 
-.idea/
+# Logging #
+###########
+/logs
+*.log
+
+# Misc #
+########
+*.bak
+
+# System #
+##########
+.DS_Store
+ehthumbs.db
+Thumbs.db
+*.bat
+*.sh
+
+# Project #
+###########
+.checkstyle
+.classpath
+.externalToolBuilders
+.gradle
+.nb-gradle
+.idea
+.project
+.settings
+eclipse
+nbproject
+atlassian-ide-plugin.xml
+build.xml
+nb-configuration.xml
 *.iml
 *.ipr
 *.iws
+*.launch
+*.number
 
-# vscode
-
-.settings/
-.vscode/
-bin/
-.classpath
-.project
-
-# macos
-
-*.DS_Store
-
-# fabric
-
-run/

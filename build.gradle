@@ -1,96 +1,61 @@
 buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "forge"
+            url = "https://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = 'sponge'
+            url = 'https://repo.spongepowered.org/maven'
+        }
+    }
     dependencies {
-        classpath 'com.github.BocchiKessokuTeam.ArchitecturyLoomLegacy:ArchitecturyLoom-Legacy:0.12.0.2'
-    }
-}
-plugins {
-    //id "dev.architectury.legacy.loom" version "0.12.0.2"
-    id "java"
-    id "maven-publish"
-}
-apply plugin: "dev.architectury.legacy.loom"
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = JavaVersion.VERSION_1_8
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
-
-loom {
-    setIntermediaryUrl("https://maven.legacyfabric.net/net/legacyfabric/intermediary/${minecraft_version}/intermediary-${minecraft_version}-v2.jar")
-    forge {
-        dataGen {
-            mod project.mod_id
-        }
-    }
-    launches {
-        data {
-            arg "--existing", file("src/main/resources").absolutePath
-        }
+        classpath 'net.minecraftforge.gradle:ForgeGradle:' + project.forgeGradleVersion
+        classpath 'org.spongepowered:mixingradle:0.5-SNAPSHOT'
     }
 }
 
-repositories {
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+apply plugin: 'org.spongepowered.mixin'
 
+group = "com.mumfrey.examplemod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "examplemod"
+
+minecraft {
+    // these values are defined in the gradle.properties file, so that this file does not need to be altered
+    version = project.mcVersion
+    mappings = project.mcMappings
+    runDir = "run"
 }
 
-dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "de.oceanlabs.mcp:mcp_${project.mcp_channel}:${project.mcp_version}@zip"
-    forge "net.minecraftforge:forge:${project.forge_version}"
-}
-
-processResources {
-    inputs.property "mod_version", project.version
-
-    filesMatching("mcmod.info") {
-        expand "mod_version": project.version
+sourceSets {
+    main {
+        // Refmap declaration must match the refmap name specified in the json config
+        ext.refMap = "mixins.example.refmap.json"
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-    options.release = 8
+mixin {
+    // liteloader does not do runtime deobfuscation, so in production we use "notch names", mixin needs to know this
+    defaultObfuscationEnv notch
 }
 
-java {
-    withSourcesJar()
+litemod {
+    json {
+        name = "test"
+        mcversion = project.targetVersion
+        description = "An example litemod project which draws a clock in-game" 
+        mixinConfigs += "mixins.example.json"
+    }
 }
 
 jar {
-    // add some additional metadata to the jar manifest
-    manifest {
-        attributes([
-                "Specification-Title"     : project.mod_id,
-                "Specification-Vendor"    : project.mod_author,
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : version,
-                "Implementation-Vendor"   : project.mod_author,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
+    // The litemod task above generates the litemod.json dynamically, you can replace it with a resource if you want more control
+    from litemod.outputs
 }
