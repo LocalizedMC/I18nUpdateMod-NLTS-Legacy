@@ -1,0 +1,7 @@
+
+key.clock.toggle=Toggle Clock
+
+examplemod.config.title=Example Mod Configuration
+examplemod.config.help.1=This is a simple option which demonstrates how to
+examplemod.config.help.2=add a checkbox option
+examplemod.config.option.enabled=Enable clock

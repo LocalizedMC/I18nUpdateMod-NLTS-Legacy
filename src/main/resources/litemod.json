@@ -1,0 +1,8 @@
+{
+    "name": "example",
+    "version": 0.0,
+    "mcversion": "1.11.r2",
+    "mixinConfigs": [
+        "mixins.example.json"
+    ]
+}
