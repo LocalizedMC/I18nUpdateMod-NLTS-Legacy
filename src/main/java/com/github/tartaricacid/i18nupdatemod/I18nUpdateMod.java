@@ -23,7 +23,7 @@ public class I18nUpdateMod {
 
     public static final String MODID = "i18nupdatemod";
     public static final String NAME = "I18nUpdateMod-NLTS-Legacy";
-    public static final String VERSION = "0.1.1";
+    public static final String VERSION = "0.1";
     public static final Path CACHE_DIR = Paths.get(System.getProperty("user.home"), "." + MODID, "1.12");
     public static final Path RESOURCE_FOLDER = Paths.get(Minecraft.getMinecraft().gameDir.getAbsolutePath(), "/resourcepacks");
     public static final String LANG_PACK_FILE_NAME = I18nModConfig.download.resourcePackName + ".zip";
@@ -65,7 +65,7 @@ public class I18nUpdateMod {
             FileUtils.copyURLToFile(new URL(MD5), LANGUAGE_MD5.toFile());
         } catch (IOException e) {
             e.printStackTrace();
-            LOGGER.error("Download MD5 failed.");
+            LOGGER.error("下载MD5校验文件失败");
             setResourcesRepository();
             return;
         }
@@ -90,20 +90,20 @@ public class I18nUpdateMod {
                 md5 = DigestUtils.md5Hex(stream).toUpperCase();
             } catch (IOException e) {
                 e.printStackTrace();
-                LOGGER.error("Error when compute md5.");
+                LOGGER.error("计算MD5时出错！");
                 setResourcesRepository();
                 return;
             }
 
             try {
                 if (!md5.equals(MD5String)) {
-                    LOGGER.info("Downloading '/Simplified Chinese Language Resource Pack/'.");
+                    LOGGER.info("简体中文汉化资源包下载中");
                     FileUtils.copyURLToFile(new URL(LINK), LANGUAGE_PACK.toFile());
                     InputStream stream = Files.newInputStream(LANGUAGE_PACK);
                     md5 = DigestUtils.md5Hex(stream).toUpperCase();
                     // 说明有可能下载损坏，就不要复制后加载了
                     if (!md5.equals(MD5String)) {
-                        LOGGER.error("Error when compute md5.");
+                        LOGGER.error("计算MD5时出错！");
                         setResourcesRepository();
                         return;
                     }
@@ -113,12 +113,12 @@ public class I18nUpdateMod {
                     Files.copy(LANGUAGE_PACK, LOCAL_LANGUAGE_PACK);
                 }
             } catch (MalformedURLException e) {
-                LOGGER.error("Download '/Simplified Chinese Language Resource Pack/' failed.");
+                LOGGER.error("简体中文汉化资源包下载失败！");
                 e.printStackTrace();
                 setResourcesRepository();
                 return;
             } catch (IOException e) {
-                LOGGER.error("Error when copy file.");
+                LOGGER.error("复制文件时出错");
                 e.printStackTrace();
                 setResourcesRepository();
                 return;
@@ -128,7 +128,7 @@ public class I18nUpdateMod {
                 FileUtils.copyURLToFile(new URL(LINK), LANGUAGE_PACK.toFile());
                 Files.copy(LANGUAGE_PACK, LOCAL_LANGUAGE_PACK);
             } catch (IOException e) {
-                LOGGER.error("Download '/Simplified Chinese Language Resource Pack/' failed.");
+                LOGGER.error("简体中文汉化资源包下载失败！");
                 e.printStackTrace();
                 return;
             }
@@ -139,7 +139,7 @@ public class I18nUpdateMod {
                 Files.copy(LANGUAGE_PACK, LOCAL_LANGUAGE_PACK);
             } catch (IOException e) {
                 e.printStackTrace();
-                LOGGER.error("Error when copy file.");
+                LOGGER.error("复制文件时出错");
                 return;
             }
         }
